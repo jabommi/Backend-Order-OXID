@@ -38,17 +38,23 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
 
 
                 /***START MOD BACKEND ORDER Recalculate Article Price ***/
-                if($this->getConfig()->getConfigParam( 'jbRecalculateOrderArticlePrice' )){
-                    $oBasketPrice = $oArticle->getBasketPrice( $oBasketItem->getAmount(), $oBasketItem->getSelList(), $this );
-                }else{
+               
+                if($this->getConfig()->isAdmin()){
                     $tempBasketItem = clone $oBasketItem;
                     $tempBasketItem->setAmount(1);
-                    $tempBasketItem->getPrice()->divide($oBasketItem->getAmount());
 
-                    $oBasketPrice = $tempBasketItem->getPrice();
+                    if($tempBasketItem->getPrice() == null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderArticlePrice' )){
+                        $oBasketPrice = $oArticle->getBasketPrice( $oBasketItem->getAmount(), $oBasketItem->getSelList(), $this );
+                    }else{
+                        $tempBasketItem->getPrice()->divide($oBasketItem->getAmount());
+                        $oBasketPrice = $tempBasketItem->getPrice();
+                    }
+                }else{
+                    $oBasketPrice = $oArticle->getBasketPrice( $oBasketItem->getAmount(), $oBasketItem->getSelList(), $this );
                 }
 
                 $oBasketItem->setPrice( $oBasketPrice );
+                
                 /***END MOD BACKEND ORDER Recalculate Article Price ***/
 
                 //P adding product price
