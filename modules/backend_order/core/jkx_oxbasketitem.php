@@ -20,7 +20,9 @@ class jkx_oxBasketitem extends jkx_oxBasketitem_parent{
     {
         parent::initFromOrderArticle( $oOrderArticle );
 
-        $this->setPrice($oOrderArticle->getPrice());
+        if($this->getConfig()->isAdmin()){
+            $this->setPrice($oOrderArticle->getPrice());
+        }
     }
 
 
