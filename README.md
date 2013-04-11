@@ -10,6 +10,10 @@ einen anderen Preis hat oder zeitlich begrenzte Rabatte, die zum Zeitpunkt der B
 Bezogen auf Bug: https://bugs.oxid-esales.com/view.php?id=4624
 
 Entwickelt für Version 4.6.1. Andere Versionen wurden nicht getestet.
+Version: 0.6
+
+-Es kann nun seperat voneinander eingestellt werden ob Artikelpreise, Rabatte oder Gutscheine neuberechnet werden. Versandkosten, Zahlartabschläge, Verpackungskosten und TS Protection werden noch neuberechnet.
+
 
 Version: 0.5
 
