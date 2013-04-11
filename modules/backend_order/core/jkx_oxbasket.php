@@ -3,6 +3,149 @@
 
 class jkx_oxBasket extends jkx_oxBasket_parent{
 
+    /**
+     * Order of this Basket
+     * @var oxOrder
+     */
+    protected $_oOrder = null;
+
+    
+    /**
+     * Executes all needed functions to calculate basket price and other needed
+     * info
+     *
+     * @param bool $blForceUpdate set this parameter to TRUE to force basket recalculation
+     *
+     * @return null
+     */
+    public function calculateBasket( $blForceUpdate = false )
+    {
+        if(!$this->getConfig()->isAdmin()){
+
+            //Use oxid standard function for Frontend
+            parent::calculateBasket( $blForceUpdate);
+            
+        }else{
+
+
+        /*
+        //would be good to perform the reset of previous calculation
+        //at least you can use it for the debug
+        $this->_aDiscounts = array();
+        $this->_aItemDiscounts = array();
+        $this->_oTotalDiscount = null;
+        $this->_dDiscountedProductNettoPrice = 0;
+        $this->_aDiscountedVats = array();
+        $this->_oPrice = null;
+        $this->_oNotDiscountedProductsPriceList = null;
+        $this->_oProductsPriceList = null;
+        $this->_oDiscountProductsPriceList = null;*/
+
+
+        if ( !$this->isEnabled() ) {
+            return;
+        }
+
+        if ( !$this->_blUpdateNeeded && !$blForceUpdate ) {
+            return;
+        }
+
+        $this->_aCosts = array();
+
+        $this->_oPrice = oxNew( 'oxprice' );
+        $this->_oPrice->setBruttoPriceMode();
+
+        //  1. saving basket to the database
+        $this->_save();
+
+        //  2. remove all bundles
+        $this->_clearBundles();
+
+        //  3. generate bundle items
+        $this->_addBundles();
+
+        // reserve active basket
+        if ($this->getConfig()->getConfigParam( 'blPsBasketReservationEnabled' )) {
+            $this->getSession()->getBasketReservations()->reserveBasket($this);
+        }
+
+        //  4. calculating item prices
+        $this->_calcItemsPrice();
+
+        /***START BACKEND ORDER Recalculate ***/
+
+        //Create oxOrder Object from origin order stored in db
+        $soxId = $this->getOrderId();
+        if($soxId != null && $soxId != '-1'){
+            $this->_oOrder = oxNew( 'oxorder');
+            $this->_oOrder->load($soxId);
+        }
+
+        //If discount recalculation is active or something has gone wrong with oxOrder Object, recalculate
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderDiscount' )) {
+            //  5. calculating/applying discounts
+            $this->_calcBasketDiscount();
+            //  6. calculating basket total discount
+            $this->_calcBasketTotalDiscount();
+        }else{
+
+            //Get basket total Discount from origin order stored in db
+            $dTotalDiscount = $this->_oOrder->getFieldData('OXDISCOUNT');
+            $this->_oTotalDiscount = oxNew( 'oxprice');
+            $this->_oTotalDiscount->setBruttoPriceMode();
+            $this->_oTotalDiscount->add($dTotalDiscount);
+            if($dTotalDiscount != null && $dTotalDiscount != 0){
+                $this->_aDiscounts[0] = oxNew( 'oxdiscount');
+                $this->_aDiscounts[0]->dDiscount = $dTotalDiscount;
+            }
+        }
+
+        //If voucher recalculation is active or something has gone wrong with oxOrder Object, recalculate
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderVoucher' )) {
+            //  7. check for vouchers
+            $this->_calcVoucherDiscount();
+        }else{
+            //Get Voucher Discount from origin order stored in db
+            $dVoucherDiscount = $this->_oOrder->getFieldData('OXVOUCHERDISCOUNT');
+            $this->_oVoucherDiscount = oxNew( 'oxPrice' );
+            $this->_oVoucherDiscount->setBruttoPriceMode();
+            $this->_oVoucherDiscount->add($dVoucherDiscount);
+        }
+
+
+
+        //  8. applies all discounts to pricelist
+        $this->_applyDiscounts();
+
+        //  9. calculating additional costs:
+        //  9.1: delivery
+        $this->setCost( 'oxdelivery', $this->_calcDeliveryCost() );
+
+        //  9.2: adding wrapping costs
+        $this->setCost( 'oxwrapping', $this->_calcBasketWrapping() );
+
+        //  9.3: adding payment cost
+        $this->setCost( 'oxpayment', $this->_calcPaymentCost() );
+
+        //  9.4: adding TS protection cost
+        $this->setCost( 'oxtsprotection', $this->_calcTsProtectionCost() );
+
+        /***END BACKEND ORDER Recalculater ***/
+
+        //  10. calculate total price
+        $this->_calcTotalPrice();
+
+        //  11. setting deprecated values
+        $this->_setDeprecatedValues();
+
+        //  12.setting to up-to-date status
+        $this->afterUpdate();
+
+        }
+
+        
+    }
+
 
 
     /**
@@ -37,8 +180,7 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
             if ( !$oBasketItem->isDiscountArticle() && ( $oArticle = $oBasketItem->getArticle() ) ) {
 
 
-                /***START MOD BACKEND ORDER Recalculate Article Price ***/
-               
+                /***START MOD BACKEND ORDER Recalculate ***/
                 if($this->getConfig()->isAdmin()){
                     $tempBasketItem = clone $oBasketItem;
                     $tempBasketItem->setAmount(1);
@@ -54,8 +196,7 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
                 }
 
                 $oBasketItem->setPrice( $oBasketPrice );
-                
-                /***END MOD BACKEND ORDER Recalculate Article Price ***/
+                /***END MOD BACKEND ORDER Recalculate  ***/
 
                 //P adding product price
                 $this->_oProductsPriceList->addToPriceList( $oBasketItem->getPrice() );
