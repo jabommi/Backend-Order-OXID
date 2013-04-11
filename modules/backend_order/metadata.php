@@ -13,7 +13,8 @@ $aModule = array(
 
     'extend' => array(
         'oxbasket' => 'backend_order/core/jkx_oxbasket',
-        'oxbasketitem' => 'backend_order/core/jkx_oxbasketitem'
+        'oxbasketitem' => 'backend_order/core/jkx_oxbasketitem',
+        'oxorder' => 'backend_order/core/jkx_oxorder'
     ),
 
     'settings' => array(
