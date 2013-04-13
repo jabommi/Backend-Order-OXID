@@ -17,6 +17,7 @@ $aLang = array(
 'SHOP_MODULE_jkxRecalculateOrderDelivery'          => 'Versandkosten bei Aktualisierung der Bestellung im Backend neuberechnen?',
 'SHOP_MODULE_jkxRecalculateOrderPayment'          => 'Zahlartabschläge bei Aktualisierung der Bestellung im Backend neuberechnen?',
 'SHOP_MODULE_jkxRecalculateOrderTSProtection'          => 'Trusted Shops Protection bei Aktualisierung der Bestellung im Backend neuberechnen?',
+'SHOP_MODULE_jkxRecalculateOrderWrapping'          => 'Verpackungskosten bei Aktualisierung der Bestellung im Backend neuberechnen?'
 
 
 );
