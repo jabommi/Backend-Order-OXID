@@ -24,6 +24,7 @@ $aModule = array(
         array('group' => 'order', 'name' => 'jkxRecalculateOrderDelivery',    'type' => 'bool', 'value' => 'false'),
         array('group' => 'order', 'name' => 'jkxRecalculateOrderPayment',    'type' => 'bool', 'value' => 'false'),
         array('group' => 'order', 'name' => 'jkxRecalculateOrderTSProtection',    'type' => 'bool', 'value' => 'false'),
+        array('group' => 'order', 'name' => 'jkxRecalculateOrderWrapping',    'type' => 'bool', 'value' => 'false')
     )
 );
 
