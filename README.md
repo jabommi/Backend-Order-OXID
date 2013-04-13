@@ -14,6 +14,11 @@ Entwickelt für Oxid Esales Version 4.6.1. Andere Versionen wurden nicht geteste
 
 Forum: http://forum.oxid-esales.com/showthread.php?t=18930
 
+Version: 1.0
+============
+Es kann nun seperat voneinander eingestellt werden, ob Artikelpreise, Rabatte, Gutscheine, Versandkosten, Zahlartabschläge, Verpackungskosten und TS Protection neuberechnet werden.
+
+
 Version: 0.6
 ============
 Es kann nun seperat voneinander eingestellt werden, ob Artikelpreise, Rabatte oder Gutscheine neuberechnet werden. Versandkosten, Zahlartabschläge, Verpackungskosten und TS Protection werden noch neuberechnet.
