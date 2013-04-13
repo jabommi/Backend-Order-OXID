@@ -12,7 +12,7 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
     
     /**
      * Executes all needed functions to calculate basket price and other needed
-     * info. You can specify recalculating or not article price, payment cost, delivery costs, wrapping costs, ts costs
+     * info. You can specify recalculating or not article price, discounts, vouchers, payment cost, delivery costs, wrapping costs, ts costs
      * in Backend.
      *
      * @param bool $blForceUpdate set this parameter to TRUE to force basket recalculation
