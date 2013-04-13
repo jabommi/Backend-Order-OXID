@@ -12,7 +12,8 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
     
     /**
      * Executes all needed functions to calculate basket price and other needed
-     * info
+     * info. You can specify recalculating or not article price, payment cost, delivery costs, wrapping costs, ts costs
+     * in Backend.
      *
      * @param bool $blForceUpdate set this parameter to TRUE to force basket recalculation
      *
@@ -72,7 +73,7 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
         //  4. calculating item prices
         $this->_calcItemsPrice();
 
-        /***START BACKEND ORDER Recalculate ***/
+        /***START MOD BACKEND ORDER Recalculate Order ***/
 
         //Create oxOrder Object from origin order stored in db
         $soxId = $this->getOrderId();
@@ -117,20 +118,68 @@ class jkx_oxBasket extends jkx_oxBasket_parent{
         //  8. applies all discounts to pricelist
         $this->_applyDiscounts();
 
+
         //  9. calculating additional costs:
         //  9.1: delivery
-        $this->setCost( 'oxdelivery', $this->_calcDeliveryCost() );
+        //If delivery costs recalculation is active or something has gone wrong with oxOrder Object, recalculate
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderDelivery' )) {
+            $this->setCost( 'oxdelivery', $this->_calcDeliveryCost() );
+        }else{
+            //Get Delivery Costs from origin order stored in db
+            $dDeliveryCosts = $this->_oOrder->getFieldData('OXDELCOST');
+            $oDCosts = oxNew( 'oxPrice' );
+            $oDCosts->setBruttoPriceMode();
+            $oDCosts->setVAT($this->_oOrder->getFieldData('OXDELVAT'));
+            $oDCosts->add($dDeliveryCosts);
+            $this->setCost( 'oxdelivery', $oDCosts );
+        }
+
+
 
         //  9.2: adding wrapping costs
-        $this->setCost( 'oxwrapping', $this->_calcBasketWrapping() );
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderWrapping' )) {
+            $this->setCost( 'oxwrapping', $this->_calcBasketWrapping() );
+        }else{
+            //Get Wrapping Costs from origin order stored in db
+            $dWrapCosts = $this->_oOrder->getFieldData('OXWRAPCOST');
+            $oWCosts = oxNew( 'oxPrice' );
+            $oWCosts->setBruttoPriceMode();
+            $oWCosts->setVAT($this->_oOrder->getFieldData('OXWRAPVAT'));
+            $oWCosts->add($dWrapCosts);
+            $this->setCost( 'oxwrapping', $oWCosts );
+        }
+
+
 
         //  9.3: adding payment cost
-        $this->setCost( 'oxpayment', $this->_calcPaymentCost() );
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderPayment' )) {
+            $this->setCost( 'oxpayment', $this->_calcPaymentCost() );
+        }else{
+             //Get Payment Costs from origin order stored in db
+             $dPaymentCosts = $this->_oOrder->getFieldData('OXPAYCOST');
+             $oPCosts = oxNew( 'oxPrice' );
+             $oPCosts->setBruttoPriceMode();
+             $oPCosts->setVAT($this->_oOrder->getFieldData('OXPAYVAT'));
+             $oPCosts->add($dPaymentCosts);
+             $this->setCost( 'oxpayment', $oPCosts );
+        }
+
+
 
         //  9.4: adding TS protection cost
-        $this->setCost( 'oxtsprotection', $this->_calcTsProtectionCost() );
+        if ($this->_oOrder== null || $this->getConfig()->getConfigParam( 'jbRecalculateOrderTSProtection' )) {
+            $this->setCost( 'oxtsprotection', $this->_calcTsProtectionCost() );
+        }else{
+             //Get TS Protection Costs from origin order stored in db
+             $dTSProtectionCosts = $this->_oOrder->getFieldData('OXTSPROTECTCOSTS');
+             $oTSCosts = oxNew( 'oxPrice' );
+             $oTSCosts->setBruttoPriceMode();
+             $oTSCosts->add($dTSProtectionCosts);
+             $this->setCost( 'oxtsprotection', $oTSCosts );
+        }
 
-        /***END BACKEND ORDER Recalculater ***/
+
+        /***END MOD BACKEND ORDER Recalculate Order ***/
 
         //  10. calculate total price
         $this->_calcTotalPrice();
