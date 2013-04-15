@@ -6,7 +6,7 @@ OXID-ESALES: deaktiviert Neuberechnung der Preise, Rabatte, Versandkosten bei Be
 Oxid berechnet standardmäßig die Preise, Rabatte, und Versandkosten neu, sobald man im Backend die Bestellung aktualisiert.
 Dies kann dazu führen, daß sich der Gesamtbetrag der Bestellung ändert, da der Artikel z.B. mittlerweile
 einen anderen Preis hat oder zeitlich begrenzte Rabatte, die zum Zeitpunkt der Bestellung aktiv waren, nicht mehr gelten.
-Mit diesem Modul kann man dieses oft unerwüschnte Verhalten deaktivieren.
+Mit diesem Modul kann man dieses oft unerwünschte Verhalten deaktivieren.
 
 Bezogen auf Bug: https://bugs.oxid-esales.com/view.php?id=4624
 
