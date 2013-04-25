@@ -10,9 +10,14 @@ Mit diesem Modul kann man dieses oft unerwünschte Verhalten deaktivieren.
 
 Bezogen auf Bug: https://bugs.oxid-esales.com/view.php?id=4624
 
-Entwickelt für Oxid Esales Version 4.6.1. Andere Versionen wurden nicht getestet.
+Entwickelt für Oxid Esales Version 4.6.6 Andere Versionen wurden nicht getestet.
 
 Forum: http://forum.oxid-esales.com/showthread.php?t=18930
+
+Version: 1.01
+============
+BUG behoben: Beim aktivieren des Moduls kommt gleich eine Fehlermeldung.
+Getestet mit Oxid Version 4.6.6
 
 Version: 1.0
 ============
