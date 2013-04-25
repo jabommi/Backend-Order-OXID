@@ -1,3 +1,5 @@
+<?php
+
 class jkx_oxOrder extends jkx_oxOrder_parent{
 
 
