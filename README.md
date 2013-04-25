@@ -17,7 +17,6 @@ Forum: http://forum.oxid-esales.com/showthread.php?t=18930
 Version: 1.01
 ============
 BUG behoben: Beim aktivieren des Moduls kommt gleich eine Fehlermeldung.
-Getestet mit Oxid Version 4.6.6
 
 Version: 1.0
 ============
