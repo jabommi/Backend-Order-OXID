@@ -183,7 +183,6 @@ class jkx_oxBasket extends jkx_oxBasket_parent
 
     }
 
-
     /**
      * Iterates through basket items and calculates its prices and discounts
      */
@@ -212,7 +211,6 @@ class jkx_oxBasket extends jkx_oxBasket_parent
                 if ($this->getConfig()->isAdmin()) {
                     $tempBasketItem = clone $oBasketItem;
                     $tempBasketItem->setAmount(1);
-
                     if ($tempBasketItem->getPrice() == null || $this->getConfig()->getConfigParam('jkxRecalculateOrderArticlePrice')) {
                         $oBasketPrice = $oArticle->getBasketPrice($oBasketItem->getAmount(), $oBasketItem->getSelList(), $this);
                     } else {
@@ -221,8 +219,21 @@ class jkx_oxBasket extends jkx_oxBasket_parent
                     }
                 } else {
                     $oBasketPrice = $oArticle->getBasketPrice($oBasketItem->getAmount(), $oBasketItem->getSelList(), $this);
-                }
+                    $oBasketItem->setRegularUnitPrice(clone $oBasketPrice);
 
+                    if (!$oArticle->skipDiscounts() && $this->canCalcDiscounts()) {
+                        // apply basket type discounts for item
+                        $aDiscounts = $oDiscountList->getBasketItemDiscounts($oArticle, $this, $this->getBasketUser());
+                        reset($aDiscounts);
+                        foreach ($aDiscounts as $oDiscount) {
+                            $oBasketPrice->setDiscount($oDiscount->getAddSum(), $oDiscount->getAddSumType());
+                        }
+                        $oBasketPrice->calculateDiscount();
+                    } else {
+                        $oBasketItem->setSkipDiscounts(true);
+                        $this->setSkipDiscounts(true);
+                    }
+                }
                 $oBasketItem->setPrice($oBasketPrice);
                 /*** END MOD BACKEND ORDER RECALCULATE ***/
 
