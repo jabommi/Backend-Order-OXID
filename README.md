@@ -1,4 +1,4 @@
-Backend Order Recalculation OXID
+Backend Order Recalculation
 =============
 Deactivates backend order recalculation for article prices, discounts, vouchers, delivery cost, payment cost and ts cost.
 
@@ -11,9 +11,12 @@ Mit diesem Modul kann man dieses oft unerwünschte Verhalten deaktivieren.
 
 Bezogen auf Bug: https://bugs.oxid-esales.com/view.php?id=4624
 
-Entwickelt für Oxid Esales Version 4.6.6 Andere Versionen wurden nicht getestet.
-
 Forum: http://forum.oxid-esales.com/showthread.php?t=18930
+
+Version: 2.0.0 (2018-12-03)
+============
+- release for OXID 4.8/4.9/4.10/5.x
+- fixed wrong setting params check
 
 Version: 1.01
 ============
