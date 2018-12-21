@@ -13,6 +13,13 @@ Bezogen auf Bug: https://bugs.oxid-esales.com/view.php?id=4624
 
 Forum: http://forum.oxid-esales.com/showthread.php?t=18930
 
+
+
+
+Version: 2.0.1 (2018-12-21)
+============
+- fixed vat calculation by existing order
+
 Version: 2.0.0 (2018-12-03)
 ============
 - release for OXID 4.8/4.9/4.10/5.x
