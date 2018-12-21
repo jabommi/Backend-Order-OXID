@@ -95,6 +95,9 @@ class jkx_oxBasket extends jkx_oxBasket_parent
                     $this->_aDiscounts[0] = oxNew('oxdiscount');
                     $this->_aDiscounts[0]->dDiscount = $dTotalDiscount;
                 }
+                
+                $this->_aDiscountedVats[$this->_oOrder->getFieldData('OXARTVAT1')] = $this->_oOrder->getFieldData('OXARTVATPRICE1');
+                $this->_aDiscountedVats[$this->_oOrder->getFieldData('OXARTVAT2')] = $this->_oOrder->getFieldData('OXARTVATPRICE2');
             }
 
             //If voucher recalculation is active or something has gone wrong with oxOrder Object, recalculate
