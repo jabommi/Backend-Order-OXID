@@ -5,11 +5,12 @@
 */
 $aModule = array(
     'id' => 'backend_order',
-    'title' => 'Backend Order',
-    'description' => 'Deactivate Recalculating article price, discount, voucher, shipping, payment, wrapping, ts protection costs in Backend Order Managment.',
-    'version' => '1.01',
-    'author' => 'Jason KX',
-
+    'title' => 'Backend Order Recalculation',
+    'description' => 'Deactivate Recalculating article price, discount, voucher, shipping, payment, wrapping, ts protection costs in backend order managment.',
+    'version' => '2.0.0',
+    'author' => 'Jason KX / Tobias Merkl',
+    'email' => '',
+    'url' => 'https://github.com/proudcommerce/Backend-Order-OXID',
 
     'extend' => array(
         'oxbasket' => 'backend_order/core/jkx_oxbasket',
